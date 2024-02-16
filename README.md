@@ -1,2 +1,2 @@
 # myrep
-Repository for testing my Git/GitHub setup
+Repository for Computational Musicology
