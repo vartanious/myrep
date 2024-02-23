@@ -1,4 +1,5 @@
 ---
+author: "Vartan Bulbulyan"
 title: "Protest Songs Then and Now: A Comparative Analysis"
 output: 
   flexdashboard::flex_dashboard:
@@ -14,7 +15,7 @@ library(compmus)
 ---
 
 ### Introduction
-***The corpus will change soon! I will do it over the weekend to allow for more interesting topic and visualization. This is why I don't go in depth into the analysis***/
+***The corpus will change soon! I will do it over the weekend to allow for more interesting topic and visualization. This is why I don't go in depth into the analysis***
 This corpus is composed of 2 playlists originating from the website The Song Sommelier The playlists, namely Protest Then! and Protest Now!, focus on providing examples of songs discussing social issues. Songs have been considered to be a particularly inspiring mean of inspiring generations in critically assessing establishments.
 
 ---
