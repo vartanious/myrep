@@ -1,108 +1,30 @@
 ---
+title: "Computational Musicology"
 author: "Vartan Bulbulyan"
-title: "Protest Songs Then and Now: A Comparative Analysis"
-output: 
-  flexdashboard::flex_dashboard:
-    storyboard: true
+date: "2024-02-23"
+output: html_document
 ---
+
 ```{r setup, include=FALSE}
-library(flexdashboard)
-library(ggplot2)
-library(tidyverse)
-library(spotifyr)
-library(compmus)
-```
----
-
-### Introduction
-***The corpus will change soon! I will do it over the weekend to allow for more interesting topic and visualization. This is why I don't go in depth into the analysis***
-This corpus is composed of 2 playlists originating from the website The Song Sommelier The playlists, namely Protest Then! and Protest Now!, focus on providing examples of songs discussing social issues. Songs have been considered to be a particularly inspiring mean of inspiring generations in critically assessing establishments.
-
----
-
-### Viz1: Valence over Speechiness in Protest Songs, Then and Now 
-```{r}
-protest_now <- get_playlist_audio_features("", "2nWfHaXUHe2dQeWyjalnN0")
-protest_then <- get_playlist_audio_features("", "6OXn22IWDDFzQfkVPWVYDF")
-protest_song <- bind_rows(protest_then, protest_now)
-protest_song <- protest_song %>%
-  mutate(year = year(ymd(track.album.release_date)))
-label_data <- protest_song %>%
-  filter(track.name %in% c("Get Up, Stand Up", "Black"))
-combined_plot <- ggplot(protest_song, aes(x = speechiness, y = valence, color = factor(year), size = track.popularity)) +
-  geom_point() +
-  scale_color_discrete(name = "Year") +
-  labs(x = "Speechiness", y = "Valence") +
-  theme_minimal() +
-  facet_wrap(~ playlist_name) +
-  theme(panel.border = element_rect(color = "black", fill = NA),
-        strip.background = element_blank(),
-        strip.text = element_text(color = "black")) +
-  geom_text(data = label_data, aes(label = ifelse(track.name == "Get Up, Stand Up", "The Wailers", "Dave")), 
-            vjust = -0.5, size = 3, color = "black")
-combined_plot
-``` 
-
----
-
-### Viz2: Chromagram of the song "Get Up Stand Up" by The Wailers
-
-```{r}
-gusu <- get_tidy_audio_analysis("0q5giEtY4wsFTwjWqswLwx") |>
-    select(segments) |>
-    unnest(segments) |>
-    select(start, duration, pitches)
-gusu |>
-    mutate(pitches = map(pitches, compmus_normalise, "euclidean")) |>
-    compmus_gather_chroma() |> 
-    ggplot(
-        aes(
-            x = start + duration / 2,
-            width = duration,
-            y = pitch_class,
-            fill = value
-        )
-    ) +
-    geom_tile() +
-    labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
-    theme_minimal() +
-    scale_fill_viridis_c()
+knitr::opts_chunk$set(echo = TRUE)
 ```
 
----
+## R Markdown
 
-### Viz3: Chromagram of the song "Black" by Dave
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
 
-```{r}
-black <- get_tidy_audio_analysis("0J43IKwcofdlTQPjcbHxCM") |>
-    select(segments) |>
-    unnest(segments) |>
-    select(start, duration, pitches)
-black |>
-    mutate(pitches = map(pitches, compmus_normalise, "euclidean")) |>
-    compmus_gather_chroma() |> 
-    ggplot(
-        aes(
-            x = start + duration / 2,
-            width = duration,
-            y = pitch_class,
-            fill = value
-        )
-    ) +
-    geom_tile() +
-    labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
-    theme_minimal() +
-    scale_fill_viridis_c()
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
 ```
 
----
+## Including Plots
 
-### Discussion
-The plot offers insights in the relationship between songs' valence and speechiness. Here, valence refers to the songs "positivity" accordingly to Spotify's measurement. Similarly, speechiness relates to the extent of vocals being present within the song. Moreover, the nodes' size present the songs popularity, and their color attributes the song's year of release. Accordingly, the Protest Then! playlits presents similarities in songs' speechiness, as opposed to Protest Now!, whose songs appear to be more diversed in level of vocals. This potentially exemplifies a diversified approach to express protesting in modern songs, at times including more vocals than usual. In comparison, Protest Then! songs indicate a uniformity in song creation, with more balance between songs' instrumentality. Additionnaly, in terms of valence, the two playlist present a balanced representation of songs' "positivity". Nevertheless, it appears that Protest Then! songs appear to be score a higher level of "positivity", as can be seen by the logarithm line. Lastly, popular songs seem to be more present above the 0.5 value of valence, which could signify that more positive songs result in more popular ones. 
+You can also embed plots, for example:
 
-The tracks "Get up Stand Up" by The Wailers and "Black" by Dave can be identified as the outliers in term of speechiness. Their position differ in terms of valence, as the first one scores a higher rate than the second one. When listening to both songs, it is clear that the two tracks differ in terms of tone, or as Spotify names it, valence. The tracks chromagrams can be seen in Viz2 and 3
-Naturally, this is only a beginning and more information will be discovered.
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
 
----
-
-
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
